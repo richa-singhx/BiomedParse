@@ -21,7 +21,15 @@ from torch import nn, Tensor, device
 import torch.distributed as dist
 import torch.nn.functional as F
 
-from detectron2.layers import cat, shapes_to_tensor
+from detectron2.layers import cat
+
+def shapes_to_tensor(x, device=None):
+    # Replacement for old Detectron2 API
+    if isinstance(x, (list, tuple)):
+        x = torch.as_tensor(x, dtype=torch.int64, device=device)
+    elif not isinstance(x, torch.Tensor):
+        raise ValueError(f"Unsupported type {type(x)} for shapes_to_tensor")
+    return x
 
 from utilities.constants import *
 
